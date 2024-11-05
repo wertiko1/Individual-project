@@ -11,6 +11,15 @@ bot = telebot.TeleBot(settings["TOKEN"])
 # "base", "small", "medium", "large"
 model = whisper.load_model("base")
 
+def print_startup_message():
+    print("\033[36m------------------------------------------------------------\033[0m")
+    print("\033[36m _____                      _____                    \033[0m")
+    print("\033[36m|  ___|  ___   _   _  _ __ |_   _| _   _  _ __   ___ \033[0m")
+    print("\033[36m| |_    / _ \ | | | || '__|  | |  | | | || '__| / _ \\\033[0m")
+    print("\033[36m|  _|  | (_) || |_| || |     | |  | |_| || |   |  __/\033[0m")
+    print("\033[36m|_|     \___/  \__,_||_|     |_|   \__,_||_|    \___|\033[0m")
+    print(f"\033[35mLogged in as FourTureProject. User: @fourprogect_bot\033[0m")
+    print("\033[36m------------------------------------------------------------\033[0m")
 
 @bot.message_handler(commands=['распознать-сообщение'])
 def start_recognition(message):
@@ -50,4 +59,6 @@ def run_bot():
             print(f"Ошибка в polling: {e}")
             time.sleep(5)
 
-run_bot()
+if __name__ == "__main__":
+    print_startup_message()
+    bot.polling()
