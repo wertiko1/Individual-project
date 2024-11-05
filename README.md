@@ -1,7 +1,7 @@
 # Individual-project
-Utility designed to simplify and partially automate simple tasks. It can be used as a standalone program or as a Telegram bot.
+A utility designed to help simplify and partially automate simple tasks. This utility is a Telegram bot that can be used as a standalone program in the future.
 * **Languages:** Python
-* **Frameworks:** telebot, Flask(?)
+* **Frameworks:** PyTelegramBotAPI
 
 # Usage
 1. `git clone https://github.com/4kture/Individual-project`
@@ -12,4 +12,5 @@ Utility designed to simplify and partially automate simple tasks. It can be used
    }
 ```
 3. Enter your Telegram bot token in the "YOUR TOKEN" field.
-4. `python tgbot.py`
+4. `pip install -r requirements.txt`
+5. `python tgbot.py`
