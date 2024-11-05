@@ -1,13 +1,15 @@
+import os
 import telebot
-from pydub import AudioSegment
 import whisper
 import time
-import os
 
-TELEGRAM_BOT_TOKEN = '7262419252:AAHAQwTqYAve5fjHa6rABN-BHqJ_khV7vNc'
-bot = telebot.TeleBot(TELEGRAM_BOT_TOKEN)
+from config import settings
+from pydub import AudioSegment
 
-model = whisper.load_model("large") # 'base', 'small', 'medium', 'large'
+bot = telebot.TeleBot(settings["TOKEN"])
+
+# "base", "small", "medium", "large"
+model = whisper.load_model("base")
 
 
 @bot.message_handler(commands=['распознать-сообщение'])
