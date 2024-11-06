@@ -4,6 +4,7 @@ import whisper
 import time
 
 from config import settings
+from telebot import types
 from pydub import AudioSegment
 
 bot = telebot.TeleBot(settings["TOKEN"])
@@ -18,11 +19,42 @@ def print_startup_message():
     print("\033[36m| |_    / _ \ | | | || '__|  | |  | | | || '__| / _ \\\033[0m")
     print("\033[36m|  _|  | (_) || |_| || |     | |  | |_| || |   |  __/\033[0m")
     print("\033[36m|_|     \___/  \__,_||_|     |_|   \__,_||_|    \___|\033[0m")
-    print(f"\033[35mLogged in as FourTureProject. User: @fourprogect_bot\033[0m")
+    print("\033[35mLogged in as FourTureProject. User: @fourprogect_bot\033[0m")
     print("\033[36m------------------------------------------------------------\033[0m")
 
-@bot.message_handler(commands=['распознать-сообщение'])
-def start_recognition(message):
+def set_bot_commands():
+    bot.set_my_commands([
+        types.BotCommand("menu", "Главное меню"),
+        types.BotCommand("notes", "Открыть ежедневник"),
+        types.BotCommand("recognize", "Преобразование голосового сообщения в текст"),
+    ])
+
+@bot.message_handler(commands=['start'])
+def send_welcome(message):
+    set_bot_commands()
+    bot.reply_to(message, "Добро пожаловать! Используйте командное меню слева от строки ввода, чтобы начать.")
+    main_menu(message)
+
+# Главное меню
+@bot.message_handler(commands=['menu'])
+def main_menu(message):
+    menu_text = "Выберите действие:"
+
+    markup = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
+    btn_menu = types.KeyboardButton("Главное меню")
+    btn_notes = types.KeyboardButton("Ежедневник")
+    markup.add(btn_menu, btn_notes)
+    bot.send_message(message.chat.id, menu_text, reply_markup=markup)
+
+@bot.message_handler(content_types=['text'])
+def handle_text_message(message):
+    if message.text == "Главное меню":
+        main_menu(message)
+    elif message.text == "Ежедневник":
+        bot.reply_to(message, "Здесь будет функция ежедневника.")
+
+@bot.message_handler(commands=['recognize'])
+def start_recognize(message):
     bot.reply_to(message, "Пожалуйста, отправьте голосовое сообщение для распознавания.")
 
 
@@ -46,10 +78,9 @@ def handle_voice_message(message):
         bot.reply_to(message, "Произошла ошибка при обработке сообщения. Попробуйте ещё раз.")
         print(f"Ошибка: {e}")
     finally:
-        if os.path.exists("voice.oga"):
-            os.remove("voice.oga")
-        if os.path.exists("voice.wav"):
-            os.remove("voice.wav")
+        for temp_file in ["voice.oga", "voice.wav"]:
+            if os.path.exists(temp_file):
+                os.remove(temp_file)
 
 def run_bot():
     while True:
@@ -61,4 +92,4 @@ def run_bot():
 
 if __name__ == "__main__":
     print_startup_message()
-    bot.polling()
+    run_bot()
